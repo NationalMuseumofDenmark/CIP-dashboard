@@ -1,0 +1,36 @@
+#main-column {
+
+}
+
+div.gridster {
+  background-color: #004756;
+}
+
+div.gridster > ul > li {
+  background-color: white;
+  overflow: hidden;
+  /* border: 1px solid #CCCCCC; */
+  list-style: none;
+  /* padding: 0.25em; */
+}
+.gridster .preview-holder {
+    border: none!important;
+    border-radius: 0!important;
+    /* background: rgba(255,255,255,.2)!important; */
+    background-color: black;
+}
+
+
+div.gridster > ul > li h1 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/*  */
+/* div.widget span.large-percentage { */
+/*   font-size: 3em; */
+/*   font-weight: bold; */
+/*   margin-top: 0; */
+/*   margin-bottom: 0; */
+/* } */

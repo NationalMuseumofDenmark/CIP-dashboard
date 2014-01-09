@@ -1,0 +1,66 @@
+<script>
+	//CIPdashboard.stats_adequate_registration = CIPdashboard.stats['stats'][$uuid_adequate_registration]['values'];
+	var layout = CIPdashboard.stats['layout'];
+  JSON.stringify(layout);
+</script>
+
+<h1>Ad qua registrering</h1>
+<span class="large-percentage"></span>
+<!--
+<?php
+	$true_count = 0;
+	if (isset($stats_adequate_registration['TRUE'])) {
+    $true_count = $stats_adequate_registration['TRUE'];
+	}
+	printf('%.1f%%', floatval($true_count) / $document['totalcount']);
+?>
+-->
+				<table>
+					<caption>Påkrævede felter</caption>
+					<thead>
+						<tr>
+							<th>Feltnavn</th>
+							<th>Udfyldelsesprocent</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Digital oprettelsesdato</td>
+						</tr>
+						<tr>
+							<td>Belysningsmetode</td>
+						</tr>
+						<tr>
+							<td>Fotograf</td>
+						</tr>
+						<tr>
+							<td>Tilgængelighed</td>
+						</tr>
+						<tr>
+							<td>Copyright</td>
+						</tr>
+						<tr>
+							<td>Licens</td>
+						</tr>
+						<tr>
+							<td>Lagt ind af</td>
+						</tr>
+						<tr>
+							<td>Kort titel</td>
+						</tr>
+						<tr>
+							<td>Beskrivelse</td>
+						</tr>
+						<tr>
+							<td>Optagelsestid, fra</td>
+						</tr>
+						<tr>
+							<td>Optagelsestid, til</td>
+						</tr>
+					</tbody>
+				</table>
+				<script>$('table tbody tr').each(function() { $(this).append('<td>' + (Math.random() * 100).toFixed(1) + '%</td>'); });</script>
+			</div>
+
+
+		</div>

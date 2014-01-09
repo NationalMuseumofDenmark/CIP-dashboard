@@ -1,0 +1,3 @@
+[submodule "vendor/gridster.js"]
+	path = vendor/gridster.js
+	url = https://github.com/dustmoo/gridster.js.git
