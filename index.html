@@ -53,6 +53,26 @@
 		};
 		$.getJSON('data.json.php').success(function(data) {
 				CIPdashboard.stats = data;
+        var layout = CIPdashboard.stats['layout']['fields'];
+
+        // convert enums
+        for (var i = 0; i < layout.length; i++) {
+          var field = layout[i];
+          var uuid = field.key;
+          if (field.type === 'Enum') {
+            // Setup `id` <-> `displaystring` pairing
+            var enum_vals = [];
+            for (var j = 0; j < field.values.length; j++) {
+              enum_vals[field.values[j].id] = field.values[j].displaystring;
+            }
+            var new_values = {};
+            for (var id in CIPdashboard.stats['stats'][uuid]['values']) {
+              var value_count = CIPdashboard.stats['stats'][uuid]['values'][id];
+              new_values[enum_vals[id]] = value_count;
+            }
+            CIPdashboard.stats['stats'][uuid]['values'] = new_values;
+          }
+        }
 			$(document).on('CIPdashboard-ready', function() {
 				CIPdashboard.has_become_ready = true;
 			});
