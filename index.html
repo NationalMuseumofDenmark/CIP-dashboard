@@ -31,8 +31,11 @@
 			},
 			'loadWidgets': function(html_pages) {
 				for (var i = 0; i < html_pages.length; i++) {
-					var $widget = CIPdashboard.addWidget($('<p>Loading...</p>'), 1, 1);
-					console.log('CIPdashboard: Loading widget: "' + html_pages[i] + '".');
+					var url   = html_pages[i][0];
+					var sizex = html_pages[i][1];
+					var sizey = html_pages[i][2];
+					var $widget = CIPdashboard.addWidget($('<p>Loading...</p>'), sizex, sizey);
+					console.log('CIPdashboard: Loading widget: "' + url + '".');
 					var success_handler = function($widget) {
 						return function(data) {
 							console.log('CIPdashboard: Successfully loaded widget: "' + this.url + '".');
@@ -41,7 +44,7 @@
 							$widget.append($(data));
 						}
 					};
-					$.get(html_pages[i]).success(success_handler($widget)).error(function() {
+					$.get(url).success(success_handler($widget)).error(function() {
 						console.log('CIPdashboard: Failed to load widget: "' + this.url + '".');
 					});
 				}
@@ -67,9 +70,10 @@
 				}).data('gridster');
 				$(document).trigger('CIPdashboard-ready');
 				CIPdashboard.loadWidgets([
-					'widgets/piechart/piechart.html',
-					'widgets/percentage/percentage.html',
-					'widgets/CIPlayout/CIPlayout.html'
+					// [file_url, sizex, sizey],
+					['widgets/piechart/piechart.html',               1 , 1 ],
+					['widgets/percentage/percentage.html',           2 , 1 ],
+					['widgets/CIPlayout/CIPlayout.html',             3 , 2 ]
 				]);
 			});
 		}).error(function(data) {

@@ -26,9 +26,14 @@ want inside your widget.
 Then load the file via the `CIPdashboard.loadWidgets()` function:
 
     CIPdashboard.loadWidgets([
-      'widgets/piechart/piechart.html',
-      'widgets/percentage/percentage.html'
+      // [url, sizex, sizey]
+      ['widgets/piechart/piechart.html',     1, 1],
+      ['widgets/percentage/percentage.html', 2, 1]
     ]);
+
+The numbers at the end of each entry are the width and height of the widget
+respecitively. The dashboard is divided into cells, and the numbers specify how
+many cells the widget spans in the horizontal and vertical direction.
 
 The HTML files should not contain `<html>`, `<head>` and `<body>` tags. The
 content of the file will be put directly into the widget element.
