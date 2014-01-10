@@ -1,6 +1,20 @@
 <script>
 	//CIPdashboard.stats_adequate_registration = CIPdashboard.stats['stats'][$uuid_adequate_registration]['values'];
 	var layout = CIPdashboard.stats['layout'];
-  $('#CIPlayout').text(JSON.stringify(layout));
+	for (var i = 0; i < layout['fields'].length; i++) {
+		var $tr = $('<tr />');
+		$tr.append('<td>' + layout['fields'][i]['name'] + '</td>');
+		$tr.append('<td>' + layout['fields'][i]['key'] + '</td>');
+		$('#CIPlayout tbody').append($tr);
+	}
 </script>
-<pre id="CIPlayout"></pre>
+<table id="CIPlayout">
+  <thead>
+	<tr>
+	  <th>Feltnavn</th>
+	  <th>UID</th>
+	</tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
