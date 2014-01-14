@@ -66,6 +66,8 @@
               enum_vals[field.values[j].id] = field.values[j].displaystring;
             }
             var new_values = {};
+            // save old values
+            CIPdashboard.stats['stats'][uuid]['enum_values'] = CIPdashboard.stats['stats'][uuid]['values'];
             for (var id in CIPdashboard.stats['stats'][uuid]['values']) {
               var value_count = CIPdashboard.stats['stats'][uuid]['values'][id];
               new_values[enum_vals[id]] = value_count;
