@@ -1,10 +1,17 @@
 <?php
-  if (!getenv('CIP_DASHBOARD_MONGODB_URL')) {
+  try {
+    $m = new \MongoClient(getenv('CIP_DASHBOARD_MONGODB_URL'));
+  } catch (Exception $e) {
     header('HTTP/1.1 500 Internal Server Error');
     // header('Content-Type: text');
-    die('CIPdashboard: You need to define the environment variable CIP_DASHBOARD_MONGODB_URL. See README.md for more info.');
-  } else {
-    $m = new \MongoClient(getenv('CIP_DASHBOARD_MONGODB_URL'));
+    $error_msg = <<<EOS
+CIPdashboard: Could not connect to MongoDB.
+You need to either define the environment variable CIP_DASHBOARD_MONGODB_URL or
+have a MongoDB database running on the same machine as the CIP-dashboard.
+See README.md for more info.
+EOS;
+    die($error_msg);
+  }
 
     $uuid_adequate_registration = '{dbafdb2c-2256-48e4-b882-0985a9eb507b}';
     $uuid_license = '{f5d1dcd8-c553-4346-8d4d-672c85bb59be}';
