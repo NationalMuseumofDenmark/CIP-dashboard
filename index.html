@@ -107,6 +107,31 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
     $('#cip-catalog-chooser').prepend('<option>Loading catalogs...</option>');
   });
 
+  // Setup `catalogChanged` hook
+  $(CIPdashboard).on('CIPdashboard-catalogChanged', function() {
+  // CIPdashboard.catalogChanged(function() {
+    console.log('CIP-dashboard: Catalog changed');
+    if (CIPdashboard.$widgets === null) {
+      CIPdashboard.loadWidgets([
+      //  [file_url, sizex, sizey],
+          ['widgets/general_stats/general_stats.html',     1 , 1 ]
+        , ['widgets/published/published.html',             1 , 1 ]
+      //, ['widgets/piechart/piechart.html',               1 , 1 ]
+        , ['widgets/percentage/percentage.html',           2 , 1 ]
+        , ['widgets/field_inspector/field_inspector.html', 3 , 1 ]
+      //, ['widgets/CIPlayout/CIPlayout.html',             3 , 2 ]
+      ]);
+    } else {
+      for (var url in CIPdashboard.$widgets) {
+        CIPdashboard.$widgets[url].html($('Loading...'));
+        $.get(url).success(function(data) {
+          CIPdashboard.$widgets[this.url].html($(data));
+        });
+      }
+    }
+  });
+
+  // Load JSON
   $.getJSON('data.json.php').success(function(data) {
     CIPdashboard.stats = data;
 
@@ -149,6 +174,8 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
           enabled: true
         }
       }).data('gridster');
+
+      $(CIPdashboard).trigger('CIPdashboard-catalogChanged');
     });
   }).error(function(data) {
     console.log('CIPdashboard: data.json.php returned: "' + data.responseText + '".');
@@ -157,28 +184,6 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
     $('.gridster').css('color', 'red');
   });
 
-  $(CIPdashboard).on('CIPdashboard-catalogChanged', function() {
-  // CIPdashboard.catalogChanged(function() {
-    console.log('CIP-dashboard: Catalog changed');
-    if (CIPdashboard.$widgets === null) {
-      CIPdashboard.loadWidgets([
-      //  [file_url, sizex, sizey],
-          ['widgets/general_stats/general_stats.html',     1 , 1 ]
-        , ['widgets/published/published.html',             1 , 1 ]
-      //, ['widgets/piechart/piechart.html',               1 , 1 ]
-        , ['widgets/percentage/percentage.html',           2 , 1 ]
-        , ['widgets/field_inspector/field_inspector.html', 3 , 1 ]
-      //, ['widgets/CIPlayout/CIPlayout.html',             3 , 2 ]
-      ]);
-    } else {
-      for (var url in CIPdashboard.$widgets) {
-        CIPdashboard.$widgets[url].html($('Loading...'));
-        $.get(url).success(function(data) {
-          CIPdashboard.$widgets[this.url].html($(data));
-        });
-      }
-    }
-  });
 });
     </script>
   </head>
