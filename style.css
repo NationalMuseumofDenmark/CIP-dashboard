@@ -20,6 +20,10 @@ header select#cip-catalog-chooser {
 
 }
 
+table caption {
+  font-style: italic;
+}
+
 div.gridster {
   background-color: #004756;
 }
