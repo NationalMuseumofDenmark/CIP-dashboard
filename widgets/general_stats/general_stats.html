@@ -1,0 +1,12 @@
+<h1>General statistics</h1>
+Number of assets? <span id="number-of-assets" class="large-percentage" float="float: left"></span>
+<br>
+How many assets have been processed?<br>
+<span id="processed-assets" class="large-percentage" float="float: left"></span>
+
+<script>
+requirejs(['jquery'], function($) {
+  $('#number-of-assets').text(CIPdashboard.stats['total_count']);
+  $('#processed-assets').text(CIPdashboard.stats['processed_count']);
+});
+</script>
