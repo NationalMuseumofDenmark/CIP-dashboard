@@ -6,8 +6,14 @@ body {
   font-family: 'Titillium Web', sans-serif;
 }
 
-h1 {
+header h1 {
   font-family: 'Titillium Web', sans-serif;
+  display: inline-block;
+}
+
+header select#cip-catalog-chooser {
+  margin-left: 2em;
+  display: inline-block;
 }
 
 #main-column {
