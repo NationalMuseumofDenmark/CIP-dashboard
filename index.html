@@ -176,6 +176,16 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
       }).data('gridster');
 
       $(CIPdashboard).trigger('CIPdashboard-catalogChanged');
+
+      $('#dashboard-settings input.drag-enable').change(function() {
+        if ($(this).is(':checked')) {
+          console.log('CIPdashboard: Enabled dragging');
+          CIPdashboard.gridster.enable();
+        } else {
+          console.log('CIPdashboard: Disabled dragging');
+          CIPdashboard.gridster.disable();
+        }
+      });
     });
   }).error(function(data) {
     console.log('CIPdashboard: data.json.php returned: "' + data.responseText + '".');
@@ -192,6 +202,9 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
       <header>
         <h1>CIP dashboard</h1><select id="cip-catalog-chooser"></select>
       </header>
+      <div id="dashboard-settings">
+        <label><input class="drag-enable" type="checkbox" checked> Allow dragging? </label>
+      </div>
       <div class="gridster">
         <ul>
         </ul>

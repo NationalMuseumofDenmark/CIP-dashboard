@@ -16,6 +16,15 @@ header select#cip-catalog-chooser {
   display: inline-block;
 }
 
+#dashboard-settings {
+  position: absolute;
+  right: -10em;
+}
+
+#dashboard-settings label {
+  font-weight: normal;
+}
+
 #main-column {
 
 }
