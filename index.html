@@ -102,6 +102,11 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
     }
   }
 
+  // Show "Loading catalogs..." in <select>, until `data.json.php` is loaded
+  $(document).ready(function() {
+    $('#cip-catalog-chooser').prepend('<option>Loading catalogs...</option>');
+  });
+
   $.getJSON('data.json.php').success(function(data) {
     CIPdashboard.stats = data;
 
@@ -112,11 +117,17 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
     }
 
     // Populate catalog <select>
+    $('#cip-catalog-chooser').html('');
     for (var catalog_alias in data['catalogs']) {
       var catalog_name = CIPdashboard.stats['catalogs'][catalog_alias]['name'];
       var $option = $('<option>' + catalog_name + '</option>');
       $option.data('catalog_alias', catalog_alias);
-      $('#cip-catalog-chooser').append($option);
+      // Make sure that the "ALL"-catalog shows first
+      if (catalog_alias === 'ALL') {
+        $('#cip-catalog-chooser').prepend($option);
+      } else {
+        $('#cip-catalog-chooser').append($option);
+      }
     }
 
     CIPdashboard.stats = data['catalogs']['ALL'];
