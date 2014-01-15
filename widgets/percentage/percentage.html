@@ -4,7 +4,7 @@
   }
   var getFilledPercentage = function(uuid) {
     var stats_field = CIPdashboard.stats['stats'][uuid];
-    var empty_percentage = (stats_field['zero_length_values'] + stats_field['empty_values']) / CIPdashboard.stats['totalcount'];
+    var empty_percentage = (stats_field['zero_length_values'] + stats_field['empty_values']) / CIPdashboard.stats['processed_count'];
     var filled_percentage = 1.0 - empty_percentage;
     return getPercentage(filled_percentage);
   }
@@ -12,8 +12,8 @@
   var uuid_adequate_registration = '{dbafdb2c-2256-48e4-b882-0985a9eb507b}';
   var stats_adequate_registration = CIPdashboard.stats['stats'][uuid_adequate_registration]['values'];
   var true_count = stats_adequate_registration['TRUE'] || 0;
-  var percentage = true_count / CIPdashboard.stats['totalcount'];
-  $('#ad-qua-percentage').text((percentage * 100).toFixed(1) + '%');
+  var percentage = true_count / CIPdashboard.stats['processed_count'];
+  $('#adequate-percentage').text((percentage * 100).toFixed(1) + '%');
 
   var fields = [
     ['Digital oprettelsesdato', '{5a193086-8b8e-424e-aa3c-3fd5abc4b8d6}'],
@@ -36,18 +36,21 @@
     var uuid = fields[i][1];
     $tr.append('<td>' + fields[i][0] + '</td>');
     $tr.append('<td>' + getFilledPercentage(uuid) + '</td>');
-    $('#ad-qua-table tbody').append($tr);
+    $('#adequate-table tbody').append($tr);
   }
 </script>
 
-<h1>Ad qua registrering</h1>
-<span id="ad-qua-percentage" class="large-percentage" float="float: left"></span>
-<table id="ad-qua-table" style="float: left">
-  <caption>Påkrævede felter</caption>
+<h1>Adequate registration</h1>
+How many assets are adequately registered?<br>
+<span id="adequate-percentage" class="large-percentage" float="float: left"></span>
+<table id="adequate-table" style="position: absolute; top: 0px; right: 15px; font-size: 0.85em;">
+  <caption>Required fields</caption>
   <thead>
     <tr>
-      <th>Feltnavn</th>
-      <th>Udfyldelsesprocent</th>
+      <!-- <th>Feltnavn</th> -->
+      <!-- <th>Udfyldelsesprocent</th> -->
+      <th>Field</th>
+      <th>Percentage filled</th>
     </tr>
   </thead>
   <tbody>

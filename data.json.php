@@ -1,4 +1,6 @@
 <?php
+define('DATA_VERSION', 3);
+
   try {
     $m = new \MongoClient(getenv('CIP_DASHBOARD_MONGODB_URL'));
   } catch (Exception $e) {
@@ -20,7 +22,7 @@ EOS;
   $db = $m->natmus;
   $collection = $db->cip_stats;
 
-  $cursor = $collection->find()->sort(array('_id' => -1))->limit(1);
+  $cursor = $collection->find(array('data_version' => DATA_VERSION))->sort(array('timestamp' => -1))->limit(1);
   $document = $cursor->getNext();
 
   echo json_encode($document);

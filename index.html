@@ -5,112 +5,176 @@
     <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
 
-    <script src="vendor/gridster.js/libs/jquery/jquery.js" type="text/javascript"></script>
-    <script src="vendor/gridster.js/dist/jquery.gridster.js" type="text/javascript" charset="utf-8"></script>
     <link href="vendor/gridster.js/dist/jquery.gridster.min.css" rel="stylesheet">
-    <!-- <script src="vendor/jqplot/jquery.min.js"></script> -->
+
+    <script src="vendor/require.js/require.js" type="text/javascript"></script>
     <script>
-    CIPdashboard = {
-      'stats': null,
-      'has_become_ready': false,
-      'ready': function(handler) {
-        if (this.has_become_ready) {
-          handler();
-        } else {
-          $(document).on('CIPdashboard-ready', function() {
-            handler();
-          });
-        }
-      },
-      'addWidget': function($html_content, sizex, sizey) {
-        console.log('CIPdashboard.addWidget()');
-        $li = $('<li />');
-        $li.append($html_content);
-        this.gridster.add_widget($li, sizex, sizey);
-        return $li;
-      },
-      'loadWidgets': function(html_pages) {
-        for (var i = 0; i < html_pages.length; i++) {
-          var url   = html_pages[i][0];
-          var sizex = html_pages[i][1];
-          var sizey = html_pages[i][2];
-          var $widget = CIPdashboard.addWidget($('<p>Loading...</p>'), sizex, sizey);
-          console.log('CIPdashboard: Loading widget: "' + url + '".');
-          var success_handler = function($widget) {
-            return function(data) {
-              console.log('CIPdashboard: Successfully loaded widget: "' + this.url + '".');
-              // CIPdashboard.addWidget($(data)), 1, 1);
-              $widget.html(''); // Clear "Loading..."
-              $widget.append($(data));
-            }
-          };
-          $.get(url).success(success_handler($widget)).error(function() {
-            console.log('CIPdashboard: Failed to load widget: "' + this.url + '".');
-          });
-        }
+requirejs.config({
+  paths: {
+    //jquery: "path/to/jquery",
+    //jquery: "vendor/gridster.js/libs/jquery/jquery.js"
+    //jquery: "vendor/jqplot/jquery.min.js",
+    jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
+    gridster: "vendor/gridster.js/dist/jquery.gridster"
+    // jqplot: "vendor/jqplot/jquery.jqplot.min.js",
+    // "jqplot.barRenderer": "vendor/jqplot/plugins/jqplot.barRenderer.min.js",
+    // "jqplot.categoryAxisRenderer": "vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min.js",
+    // "jqplot.pointLabels": "vendor/jqplot/plugins/jqplot.pointLabels.min.js",
+    // "jqplot.dateAxisRenderer": "vendor/jqplot/plugins/jqplot.dateAxisRenderer.min.js",
+    // "jqplot.canvasTextRenderer": "vendor/jqplot/plugins/jqplot.canvasTextRenderer.min.js",
+    // "jqplot.canvasAxisTickRenderer": "vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"
+  },
+  // Define dependencies
+  shim: {
+    gridster: ["jquery"]
+    // jqplot: ["jquery"],
+    // "jqplot.barRenderer": ["jqplot"],
+    // "jqplot.pointLabels": ["jqplot"],
+    // "jqplot.categoryAxisRenderer": ["jqplot"]
+  }
+});
+    </script>
+    <script>
+requirejs(['jquery', 'gridster'], function($, gridster) {
+  CIPdashboard = {
+    'stats': null,
+    '$widgets': null,
+    'has_become_ready': false,
+    'catalogChanged': function(handler) {
+      $(this).on('CIPdashboard-catalogChanged', handler);
+    },
+    'addWidget': function(url, $html_content, sizex, sizey) {
+      console.log('CIPdashboard.addWidget()');
+      var $li = $('<li />');
+      $li.append($html_content);
+      this.gridster.add_widget($li, sizex, sizey);
+      if (this.$widgets === null) {
+        this.$widgets = {};
       }
+      this.$widgets[url] = $li;
+      return $li;
+    },
+    'loadWidgets': function(html_pages) {
+      for (var i = 0; i < html_pages.length; i++) {
+        var url   = html_pages[i][0];
+        var sizex = html_pages[i][1];
+        var sizey = html_pages[i][2];
+        var $widget = CIPdashboard.addWidget(url, $('<p>Loading...</p>'), sizex, sizey);
+        console.log('CIPdashboard: Loading widget: "' + url + '".');
+        var success_handler = function($widget) {
+          return function(data) {
+            console.log('CIPdashboard: Successfully loaded widget: "' + this.url + '".');
+            // CIPdashboard.addWidget($(data)), 1, 1);
+            $widget.html(''); // Clear "Loading..."
+            // $widget.append($(data));
+            // $widget.append(data);
+            $widget.append(data);
+          };
+        };
+        $.get(url).success(success_handler($widget)).error(function() {
+          console.log('CIPdashboard: Failed to load widget: "' + this.url + '".');
+        });
+      }
+    }
 
-    };
-    $.getJSON('data.json.php').success(function(data) {
-        CIPdashboard.stats = data;
-        var layout = CIPdashboard.stats['layout']['fields'];
+  };
 
-        // convert enums
-        for (var i = 0; i < layout.length; i++) {
-          var field = layout[i];
-          var uuid = field.key;
-          if (field.type === 'Enum') {
-            // Setup `id` <-> `displaystring` pairing
-            var enum_vals = [];
-            for (var j = 0; j < field.values.length; j++) {
-              enum_vals[field.values[j].id] = field.values[j].displaystring;
-            }
-            var new_values = {};
-            // save old values
-            CIPdashboard.stats['stats'][uuid]['enum_values'] = CIPdashboard.stats['stats'][uuid]['values'];
-            for (var id in CIPdashboard.stats['stats'][uuid]['values']) {
-              var value_count = CIPdashboard.stats['stats'][uuid]['values'][id];
-              new_values[enum_vals[id]] = value_count;
-            }
-            CIPdashboard.stats['stats'][uuid]['values'] = new_values;
-          }
+  var convert_enums = function(layout, stats) {
+    // convert enums
+    for (var i = 0; i < layout.length; i++) {
+      var field = layout[i];
+      var uuid = field.key;
+      if (field.type === 'Enum') {
+        // Setup `id` <-> `displaystring` pairing
+        var enum_vals = [];
+        for (var j = 0; j < field.values.length; j++) {
+          enum_vals[field.values[j].id] = field.values[j].displaystring;
         }
-      $(document).on('CIPdashboard-ready', function() {
-        CIPdashboard.has_become_ready = true;
-      });
+        var new_values = {};
+        // save old values
+        stats[uuid]['enum_values'] = stats[uuid]['values'];
+        for (var id in stats[uuid]['values']) {
+          var value_count = stats[uuid]['values'][id];
+          new_values[enum_vals[id]] = value_count;
+        }
+        stats[uuid]['values'] = new_values;
+      }
+    }
+  }
 
-      $(document).ready(function(){ //DOM Ready
-        CIPdashboard.gridster = $(".gridster > ul").gridster({
-          widget_margins: [10, 10],
-          widget_base_dimensions: [250, 250],
-          // min_cols: 6,
-          // gridster.js does NOT work with elements other than <li>
-          // widget_selector: 'div', 
-          resize: {
-            enabled: true
-          }
-        }).data('gridster');
-        $(document).trigger('CIPdashboard-ready');
-        CIPdashboard.loadWidgets([
-          // [file_url, sizex, sizey],
-            ['widgets/published/published.html',             1 , 1 ]
-          //['widgets/piechart/piechart.html',               1 , 1 ],
-          , ['widgets/percentage/percentage.html',           2 , 1 ]
-          , ['widgets/field_inspector/field_inspector.html', 3 , 1 ]
-          // , ['widgets/CIPlayout/CIPlayout.html',             3 , 2 ]
-        ]);
-      });
-    }).error(function(data) {
-      console.log('CIPdashboard: data.json.php returned: "' + data.responseText + '".');
-      $('.gridster').text(data.responseText);
-      $('.gridster').css('background-color', 'white');
-      $('.gridster').css('color', 'red');
+  $.getJSON('data.json.php').success(function(data) {
+    CIPdashboard.stats = data;
+
+    // Convert array indices for Enum types
+    for (var catalog_alias in data['catalogs']) {
+      convert_enums(data['catalogs'][catalog_alias]['layout']['fields'],
+                    data['catalogs'][catalog_alias]['stats']);
+    }
+
+    // Populate catalog <select>
+    for (var catalog_alias in data['catalogs']) {
+      var catalog_name = CIPdashboard.stats['catalogs'][catalog_alias]['name'];
+      var $option = $('<option>' + catalog_name + '</option>');
+      $option.data('catalog_alias', catalog_alias);
+      $('#cip-catalog-chooser').append($option);
+    }
+
+    CIPdashboard.stats = data['catalogs']['ALL'];
+
+    $('#cip-catalog-chooser').change(function() {
+      var $option_selected = $($("option:selected", this));
+      CIPdashboard.stats = data['catalogs'][$option_selected.data('catalog_alias')];
+      $(CIPdashboard).trigger('CIPdashboard-catalogChanged');
     });
+
+    $(document).ready(function() {
+      CIPdashboard.gridster = $(".gridster > ul").gridster({
+        widget_margins: [10, 10],
+        widget_base_dimensions: [250, 250],
+        // min_cols: 6,
+        // gridster.js does NOT work with elements other than <li>
+        // widget_selector: 'div', 
+        resize: {
+          enabled: true
+        }
+      }).data('gridster');
+    });
+  }).error(function(data) {
+    console.log('CIPdashboard: data.json.php returned: "' + data.responseText + '".');
+    $('.gridster').text(data.responseText);
+    $('.gridster').css('background-color', 'white');
+    $('.gridster').css('color', 'red');
+  });
+
+  $(CIPdashboard).on('CIPdashboard-catalogChanged', function() {
+  // CIPdashboard.catalogChanged(function() {
+    console.log('CIP-dashboard: Catalog changed');
+    if (CIPdashboard.$widgets === null) {
+      CIPdashboard.loadWidgets([
+      //  [file_url, sizex, sizey],
+          ['widgets/published/published.html',             1 , 1 ]
+      //, ['widgets/piechart/piechart.html',               1 , 1 ]
+        , ['widgets/percentage/percentage.html',           2 , 1 ]
+        , ['widgets/field_inspector/field_inspector.html', 3 , 1 ]
+      //, ['widgets/CIPlayout/CIPlayout.html',             3 , 2 ]
+      ]);
+    } else {
+      for (var url in CIPdashboard.$widgets) {
+        CIPdashboard.$widgets[url].html($('Loading...'));
+        $.get(url).success(function(data) {
+          CIPdashboard.$widgets[this.url].html($(data));
+        });
+      }
+    }
+  });
+});
     </script>
   </head>
   <body>
     <div id="main-column" class="col-md-offset-2 col-md-8">
-      <h1>CIP dashboard</h1>
+      <header>
+        <h1>CIP dashboard</h1><select id="cip-catalog-chooser"></select>
+      </header>
       <div class="gridster">
         <ul>
         </ul>
