@@ -1,12 +1,25 @@
 <h1>General statistics</h1>
 Number of assets? <span id="number-of-assets" class="large-percentage" float="float: left"></span>
 <br>
+<div style="display:none">
 How many assets have been processed?<br>
 <span id="processed-assets" class="large-percentage" float="float: left"></span>
+</div>
 
 <script>
 requirejs(['jquery'], function($) {
-  $('#number-of-assets').text(CIPdashboard.stats['total_count']);
-  $('#processed-assets').text(CIPdashboard.stats['processed_count']);
+  function format(n, sep, decimals) {
+    sep = sep || "."; // Default to period as decimal separator
+    decimals = decimals || 2; // Default to 2 decimals
+
+    return n.toLocaleString(); //.split(sep)[0];
+      // + sep
+      // + n.toFixed(decimals).split(sep)[1];
+  }
+
+  $('#number-of-assets').text(format(CIPdashboard.stats['total_count'], '.', 0));
+  if (CIPdashboard.stats['processed_count'] !== CIPdashboard.stats['total_count']) {
+    $('#processed-assets').text(format(CIPdashboard.stats['processed_count'], '.', 0));
+  }
 });
 </script>
