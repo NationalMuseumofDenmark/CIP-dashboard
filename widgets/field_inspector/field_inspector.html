@@ -79,8 +79,9 @@ requirejs(['jquery',
     console.log(counts);
     console.log(values);
 
-    // counts.push(stats[uuid]['empty_values']);
-    // values.push('(tomt felt)');
+    counts.push(stats[uuid]['empty_values']);
+    values.push('(tomt felt)');
+
     // plot1.series[0].data = counts;
     // plot1.axes.xaxis.ticks = values;
     // plot1.replot({resetAxes: true, data:[counts], axes:{xaxis:{ticks:values}}});
