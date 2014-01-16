@@ -1,24 +1,23 @@
 <h1>Licenses</h1>
-<script src="vendor/jqplot/jquery.min.js"></script>
-<script src="vendor/jqplot/jquery.jqplot.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
-<div id="licenseChart"></div>
+Under what license are the assets published?
+<div id="licenseChart" style="height: 185px;"></div>
 <script>
-$(document).ready(function(){
-  // var data = CIPdashboard.stats['stats'];
-  var data = [
-    ['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14], 
-    ['Out of home', 16],['Commuting', 7], ['Orientation', 9]
-  ];
+requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
+  var uuid_license = '{f5d1dcd8-c553-4346-8d4d-672c85bb59be}';
+  var stats_license = CIPdashboard.stats['stats'][uuid_license];
+  var data = [];
+  for (var pub_status in stats_license['values']) {
+    data.push([pub_status, stats_license['values'][pub_status]]);
+  }
   var plot1 = jQuery.jqplot ('licenseChart', [data], 
-    { 
-			// remove border around graph
-		  grid: {
-				borderColor:'transparent',
-				shadow:false,
-				drawBorder:false,
-				shadowColor:'transparent'
-			},
+    {
+      // remove border around graph
+      grid: {
+        borderColor:'transparent',
+        shadow:false,
+        drawBorder:false,
+        shadowColor:'transparent'
+      },
       seriesDefaults: {
         // Make this a pie chart.
         renderer: jQuery.jqplot.PieRenderer, 

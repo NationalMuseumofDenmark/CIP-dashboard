@@ -16,22 +16,27 @@ requirejs.config({
     //jquery: "vendor/gridster.js/libs/jquery/jquery.js"
     //jquery: "vendor/jqplot/jquery.min.js",
     jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
-    gridster: "vendor/gridster.js/dist/jquery.gridster"
-    // jqplot: "vendor/jqplot/jquery.jqplot.min.js",
-    // "jqplot.barRenderer": "vendor/jqplot/plugins/jqplot.barRenderer.min.js",
-    // "jqplot.categoryAxisRenderer": "vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min.js",
-    // "jqplot.pointLabels": "vendor/jqplot/plugins/jqplot.pointLabels.min.js",
-    // "jqplot.dateAxisRenderer": "vendor/jqplot/plugins/jqplot.dateAxisRenderer.min.js",
-    // "jqplot.canvasTextRenderer": "vendor/jqplot/plugins/jqplot.canvasTextRenderer.min.js",
-    // "jqplot.canvasAxisTickRenderer": "vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"
+    gridster: "vendor/gridster.js/dist/jquery.gridster",
+    jqplot: "vendor/jqplot/jquery.jqplot.min",
+    "jqplot.barRenderer": "vendor/jqplot/plugins/jqplot.barRenderer.min",
+    "jqplot.categoryAxisRenderer": "vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min",
+    "jqplot.pointLabels": "vendor/jqplot/plugins/jqplot.pointLabels.min",
+    "jqplot.pieRenderer": "vendor/jqplot/plugins/jqplot.pieRenderer.min"
+    // "jqplot.dateAxisRenderer": "vendor/jqplot/plugins/jqplot.dateAxisRenderer.min",
+    // "jqplot.canvasTextRenderer": "vendor/jqplot/plugins/jqplot.canvasTextRenderer.min",
+    // "jqplot.canvasAxisTickRenderer": "vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min"
   },
   // Define dependencies
   shim: {
-    gridster: ["jquery"]
-    // jqplot: ["jquery"],
-    // "jqplot.barRenderer": ["jqplot"],
-    // "jqplot.pointLabels": ["jqplot"],
-    // "jqplot.categoryAxisRenderer": ["jqplot"]
+    gridster: ["jquery"],
+    jqplot: ["jquery"],
+    "jqplot.barRenderer": ["jqplot"],
+    "jqplot.pointLabels": ["jqplot"],
+    "jqplot.categoryAxisRenderer": ["jqplot"],
+    "jqplot.pieRenderer": ["jqplot"]
+    // "jqplot.dateAxisRenderer": ["jqplot"],
+    // "jqplot.canvasTextRenderer": ["jqplot"],
+    // "jqplot.canvasAxisTickRenderer": ["jqplot"]
   }
 });
     </script>
@@ -117,7 +122,7 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
       //  [file_url, sizex, sizey],
           ['widgets/general_stats/general_stats.html',     1 , 1 ]
         , ['widgets/published/published.html',             1 , 1 ]
-      //, ['widgets/piechart/piechart.html',               1 , 1 ]
+        , ['widgets/piechart/piechart.html',               1 , 1 ]
         , ['widgets/percentage/percentage.html',           2 , 1 ]
         , ['widgets/field_inspector/field_inspector.html', 3 , 1 ]
       //, ['widgets/CIPlayout/CIPlayout.html',             3 , 2 ]
