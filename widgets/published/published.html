@@ -1,7 +1,7 @@
 <h1>Published status</h1>
 How many assets are published? <span id="published-percentage" class="large-percentage" float="float: left"></span>
 <!-- <h4>Publishing overview</h4> -->
-<style>table#publish-table { margin-top: 1em; border-spacing: 0.5em 0em; border-collapse: separate; }</style>
+<style>table#publish-table { margin-top: 1em; border-spacing: 0.5em 0em; border-collapse: separate; display: none;}</style>
 <table id="publish-table">
   <thead>
     <tr>
@@ -37,5 +37,54 @@ requirejs(['jquery'], function($) {
     $tr.append('<td>' + getPercentage(stats_published['values'][pub_status] / CIPdashboard.stats['processed_count']) + '</td>');
     $('#publish-table tbody').append($tr);
   }
+});
+</script>
+
+<!-- <script src="vendor/jqplot/jquery.min.js"></script> -->
+<!-- <script src="vendor/jqplot/jquery.jqplot.min.js"></script> -->
+<!-- <script src="vendor/jqplot/plugins/jqplot.pieRenderer.min.js"></script> -->
+<div id="publishedChart" style="height: 145px;"></div>
+<script>
+requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
+  // var data = CIPdashboard.stats['stats'];
+  var uuid_published = '{a493be21-0f70-4cae-9394-703eca848bad}';
+  var stats_published = CIPdashboard.stats['stats'][uuid_published];
+  var data = [];
+  for (var pub_status in stats_published['values']) {
+    data.push([pub_status, stats_published['values'][pub_status]]);
+    // getPercentage(stats_published['values'][pub_status] / CIPdashboard.stats['processed_count']) + '</td>');
+  }
+  // var data = [
+  //   ['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14], 
+  //   ['Out of home', 16],['Commuting', 7], ['Orientation', 9]
+  // ];
+  var plot1 = $.jqplot ('publishedChart', [data], 
+    { 
+      // remove border around graph
+      grid: {
+        borderColor:'transparent',
+        shadow:false,
+        drawBorder:false,
+        shadowColor:'transparent'
+      },
+      seriesDefaults: {
+        // Make this a pie chart.
+        renderer: jQuery.jqplot.PieRenderer, 
+        rendererOptions: {
+          // Put data labels on the pie slices.
+          // By default, labels show the percentage of the slice.
+          showDataLabels: true,
+          padding: 4,
+
+          // fill: false,
+          // Add a margin to seperate the slices.
+          sliceMargin: 4, 
+          // stroke the slices with a little thicker line.
+          lineWidth: 5,
+        }
+      }, 
+      legend: { show:true, location: 'e' }
+    }
+  );
 });
 </script>
