@@ -95,7 +95,7 @@
   var getFilledPercentage = function(uuid) {
     var stats_field = CIPdashboard.stats['stats'][uuid];
     console.log(stats_field['empty_values']);
-    var empty_percentage = (stats_field['zero_length_values'] + stats_field['empty_values']) / CIPdashboard.stats['totalcount'];
+    var empty_percentage = (stats_field['zero_length_values'] + stats_field['empty_values']) / CIPdashboard.stats['total_count'];
     var filled_percentage = 1.0 - empty_percentage;
     return getPercentage(filled_percentage);
   }
