@@ -1,5 +1,5 @@
 <!-- TODO: Loading these two script breaks the piechart-widget -->
-<script src="vendor/jqplot/jquery.min.js"></script>
+<!-- <script src="vendor/jqplot/jquery.min.js"></script> -->
 <script src="vendor/jqplot/jquery.jqplot.min.js"></script>
 <script src="vendor/jqplot/plugins/jqplot.barRenderer.min.js"></script>
 <script src="vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
@@ -8,6 +8,15 @@
 <script src="vendor/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
 <script src="vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
 <script>
+requirejs(['jquery',
+    // 'jqplot',
+//   'jqplot.barRenderer.min',
+//   'jqplot.categoryAxisRenderer.min',
+//   'jqplot.pointLabels.min',
+//   'jqplot.dateAxisRenderer.min',
+//   'jqplot.canvasTextRenderer.min',
+//   'jqplot.canvasAxisTickRenderer.min'
+], function($) {
 
   var options = {
     // The "seriesDefaults" option is an options object that will
@@ -86,7 +95,7 @@
       var plot1 = $.jqplot('chart-field-inspector', [counts], options);
     }
   });
-
+});
 </script>
 <script>
   var getPercentage = function(percentage) {
