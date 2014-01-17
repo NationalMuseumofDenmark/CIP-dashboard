@@ -1,21 +1,11 @@
 <!-- TODO: Loading these two script breaks the piechart-widget -->
 <!-- <script src="vendor/jqplot/jquery.min.js"></script> -->
-<script src="vendor/jqplot/jquery.jqplot.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.barRenderer.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.pointLabels.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
-<script src="vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
 <script>
-requirejs(['jquery',
-    // 'jqplot',
-//   'jqplot.barRenderer.min',
-//   'jqplot.categoryAxisRenderer.min',
-//   'jqplot.pointLabels.min',
-//   'jqplot.dateAxisRenderer.min',
-//   'jqplot.canvasTextRenderer.min',
-//   'jqplot.canvasAxisTickRenderer.min'
+requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRenderer',
+  'jqplot.pointLabels',
+  'jqplot.dateAxisRenderer',
+  'jqplot.canvasTextRenderer',
+  'jqplot.canvasAxisTickRenderer'
 ], function($) {
 
   var options = {
