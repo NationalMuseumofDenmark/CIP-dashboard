@@ -200,13 +200,21 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
     $('.gridster').css('color', 'red');
   });
 
+  // Load dashboard config
+  $.getJSON('conf.json').success(function(data) {
+    console.log('Loaded conf.json');
+    $(document).ready(function() {
+      $('#dashboard-title').text(data['dashboard-title']);
+    });
+  });
+
 });
     </script>
   </head>
   <body>
     <div id="main-column" class="col-md-offset-2 col-md-8">
       <header>
-        <h1>CIP dashboard</h1><select id="cip-catalog-chooser"></select>
+        <h1 id="dashboard-title">CIP dashboard</h1><select id="cip-catalog-chooser"></select>
       </header>
       <div id="dashboard-settings">
         <label><input class="drag-enable" type="checkbox" checked> Allow dragging? </label>

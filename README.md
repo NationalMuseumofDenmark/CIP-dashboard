@@ -54,3 +54,11 @@ called when the dashboard is readu.
 `CIPdashboard.addWidget($html, sizex, sizey)` accepts three arguments. The first
 is the HTML content wrapped in jQuery. The second is the width of the widget in
 blocks. The third is the height of the widget in blocks.
+
+Configuration
+-------------
+You can change the title of the dashboard by setting a value called
+`dashboard-title` in a JSON file `conf.json` placed in the same directory as
+`index.html`.
+
+For an example please check out `conf.example.json`.
