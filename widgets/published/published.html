@@ -28,6 +28,13 @@ requirejs(['jquery'], function($) {
   var uuid_published = '{a493be21-0f70-4cae-9394-703eca848bad}';
   var stats_published = CIPdashboard.stats['stats'][uuid_published];
   var published_count = stats_published['enum_values'][enum_id_public];
+  // http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric
+  function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+  if (!isNumber(published_count)) {
+    published_count = 0;
+  }
   var percentage = published_count / CIPdashboard.stats['processed_count'];
   $('#published-percentage').text((percentage * 100).toFixed(1) + '%');
 
