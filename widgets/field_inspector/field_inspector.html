@@ -53,7 +53,7 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
     }
   }
 
-  $('#field-inspector-select').change(function() {
+  var select_change_handler = function() {
     var $optionSelected = $($("option:selected", this));
     var field = $optionSelected.data('field');
     var uuid = field.key;
@@ -69,6 +69,7 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
     console.log(counts);
     console.log(values);
 
+    // Add empty values to histogram
     counts.push(stats[uuid]['empty_values']);
     values.push('(tomt felt)');
 
@@ -85,7 +86,12 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
       options.axes.xaxis.ticks = values;
       var plot1 = $.jqplot('chart-field-inspector', [counts], options);
     }
-  });
+  };
+
+  $('#field-inspector-select').change(select_change_handler);
+
+  // Ensure that a field is selected from the beginning
+  select_change_handler.apply($('#field-inspector-select'));
 });
 </script>
 <script>
