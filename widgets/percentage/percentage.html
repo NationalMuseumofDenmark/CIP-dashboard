@@ -1,6 +1,10 @@
 <script>
   var getPercentage = function(percentage) {
-    return (percentage * 100).toFixed(1) + '%';
+    if (!isNaN(percentage)) {
+      return (percentage * 100).toFixed(1) + '%';
+    } else {
+      return '-';
+    }
   }
   var getFilledPercentage = function(uuid) {
     var stats_field = CIPdashboard.stats['stats'][uuid];
@@ -13,7 +17,7 @@
   var stats_adequate_registration = CIPdashboard.stats['stats'][uuid_adequate_registration]['values'];
   var true_count = stats_adequate_registration['TRUE'] || 0;
   var percentage = true_count / CIPdashboard.stats['processed_count'];
-  $('#adequate-percentage').text((percentage * 100).toFixed(1) + '%');
+  $('#adequate-percentage').text(getPercentage(percentage));
 
   var fields = [
     ['Digital oprettelsesdato', '{5a193086-8b8e-424e-aa3c-3fd5abc4b8d6}'],

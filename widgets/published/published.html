@@ -36,7 +36,11 @@ requirejs(['jquery'], function($) {
     published_count = 0;
   }
   var percentage = published_count / CIPdashboard.stats['processed_count'];
-  $('#published-percentage').text((percentage * 100).toFixed(1) + '%');
+  if (isNumber(percentage)) {
+    $('#published-percentage').text((percentage * 100).toFixed(1) + '%');
+  } else {
+    $('#published-percentage').text('-');
+  }
 
   for (var pub_status in stats_published['values']) {
     var $tr = $('<tr />');
