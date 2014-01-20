@@ -43,7 +43,11 @@ requirejs.config({
     <script>
 requirejs(['jquery', 'gridster'], function($, gridster) {
   CIPdashboard = {
+    // TODO: Make `stats` a function that returns the stats based on 
+    //       CIPdashboard.catalog` and `CIPdashboard.query`.
     'stats': null,
+    'catalog': null,
+    'query': null,
     '$widgets': null,
     'has_become_ready': false,
     'catalogChanged': function(handler) {
@@ -142,15 +146,37 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
     CIPdashboard.stats = data;
 
     // Convert array indices for Enum types
-    for (var catalog_alias in data['catalogs']) {
-      convert_enums(data['catalogs'][catalog_alias]['layout']['fields'],
-                    data['catalogs'][catalog_alias]['stats']);
+    for (var query_name in data['stats']) {
+      for (var catalog_alias in data['stats'][query_name]) {
+        convert_enums(data['stats'][query_name][catalog_alias]['layout']['fields'],
+                      data['stats'][query_name][catalog_alias]['stats']);
+      }
     }
 
+    // Populate query <select>
+    $('#cip-query-chooser').html('');
+    for (var query_name in data['stats']) {
+      // var catalog_name = CIPdashboard.stats['catalogs'][query_name]['name'];
+      var $option = $('<option>' + query_name + '</option>');
+      $option.data('query_name', query_name);
+      // Make sure that the "ALL"-catalog shows first
+      if (query_name === 'ALL') {
+        $('#cip-query-chooser').prepend($option);
+      } else {
+        $('#cip-query-chooser').append($option);
+      }
+    }
+
+    $('#cip-query-chooser').change(function() {
+      var $option_selected = $($("option:selected", this));
+      CIPdashboard.query = $option_selected.data('query_name');
+      CIPdashboard.stats = data['stats'][$option_selected.data('query_name')][CIPdashboard.catalog];
+      $(CIPdashboard).trigger('CIPdashboard-catalogChanged');
+    });
     // Populate catalog <select>
     $('#cip-catalog-chooser').html('');
-    for (var catalog_alias in data['catalogs']) {
-      var catalog_name = CIPdashboard.stats['catalogs'][catalog_alias]['name'];
+    for (var catalog_alias in data['stats']['ALL']) {
+      var catalog_name = data['stats']['ALL'][catalog_alias]['name'];
       var $option = $('<option>' + catalog_name + '</option>');
       $option.data('catalog_alias', catalog_alias);
       // Make sure that the "ALL"-catalog shows first
@@ -161,11 +187,14 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
       }
     }
 
-    CIPdashboard.stats = data['catalogs']['ALL'];
+    CIPdashboard.stats = data['stats']['ALL']['ALL'];
+    CIPdashboard.query = 'ALL';
+    CIPdashboard.catalog = 'ALL';
 
     $('#cip-catalog-chooser').change(function() {
       var $option_selected = $($("option:selected", this));
-      CIPdashboard.stats = data['catalogs'][$option_selected.data('catalog_alias')];
+      CIPdashboard.catalog = $option_selected.data('catalog_alias');
+      CIPdashboard.stats = data['stats'][CIPdashboard.query][$option_selected.data('catalog_alias')];
       $(CIPdashboard).trigger('CIPdashboard-catalogChanged');
     });
 
@@ -214,7 +243,9 @@ requirejs(['jquery', 'gridster'], function($, gridster) {
   <body>
     <div id="main-column" class="col-md-offset-2 col-md-8">
       <header>
-        <h1 id="dashboard-title">CIP dashboard</h1><select id="cip-catalog-chooser"></select>
+        <h1 id="dashboard-title">CIP dashboard</h1>
+        <select id="cip-catalog-chooser"></select>
+        <select id="cip-query-chooser"></select>
       </header>
       <div id="dashboard-settings">
         <label><input class="drag-enable" type="checkbox" checked> Allow dragging? </label>

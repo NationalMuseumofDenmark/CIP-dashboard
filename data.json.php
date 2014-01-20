@@ -1,5 +1,5 @@
 <?php
-define('DATA_VERSION', 3);
+define('DATA_VERSION', 4);
 
   try {
     $m = new \MongoClient(getenv('CIP_DASHBOARD_MONGODB_URL'));
