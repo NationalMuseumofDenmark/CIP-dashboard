@@ -10,6 +10,17 @@
 
     <script src="vendor/require.js/require.js" type="text/javascript"></script>
     <script>
+
+var jqplot_dependencies = ["jquery"];
+
+// Internet Explorer 8 and earlier doesn't support canvas, but the "excanvas"
+// module can provide it for us.
+if (navigator.appVersion.indexOf("MSIE 6") !== -1 ||
+    navigator.appVersion.indexOf("MSIE 7") !== -1 ||
+    navigator.appVersion.indexOf("MSIE 8") !== -1) {
+  jqplot_dependencies.push("excanvas");
+}
+
 requirejs.config({
   paths: {
     //jquery: "path/to/jquery",
@@ -17,6 +28,7 @@ requirejs.config({
     //jquery: "vendor/jqplot/jquery.min.js",
     jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
     gridster: "vendor/gridster.js/dist/jquery.gridster",
+    excanvas: "vendor/jqplot/other/dist/excanvas.min",
     jqplot: "vendor/jqplot/jquery.jqplot.min",
     "jqplot.barRenderer": "vendor/jqplot/plugins/jqplot.barRenderer.min",
     "jqplot.categoryAxisRenderer": "vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min",
@@ -32,7 +44,7 @@ requirejs.config({
   // Define dependencies
   shim: {
     gridster: ["jquery"],
-    jqplot: ["jquery"],
+    jqplot: jqplot_dependencies,
     "jqplot.barRenderer": ["jqplot"],
     "jqplot.pointLabels": ["jqplot"],
     "jqplot.categoryAxisRenderer": ["jqplot"],
