@@ -9,6 +9,8 @@ requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
   for (var pub_status in stats_license['values']) {
     data.push([pub_status, stats_license['values'][pub_status]]);
   }
+  // Add empty count to piechart
+  data.push(['(empty)', stats_license['empty_values']]);
   var plot1 = jQuery.jqplot ('licenseChart', [data], 
     {
       // remove border around graph
@@ -28,7 +30,13 @@ requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
           padding: 4,
           shadowAlpha: 0,
 
-          fill: false,
+          // TODO: Submit bugreport to jqplot:
+          // Combining `fill: false` and `sliceMargin: 4` with small pie slices
+          // (small relative values in the chart data) causes no plot to be 
+          // drawn because of an IndexError (index out of range)
+
+          // fill: false, 
+
           // Add a margin to seperate the slices.
           sliceMargin: 4, 
           // stroke the slices with a little thicker line.
