@@ -24,7 +24,10 @@ requirejs.config({
     "jqplot.pieRenderer": "vendor/jqplot/plugins/jqplot.pieRenderer.min",
     "jqplot.dateAxisRenderer": "vendor/jqplot/plugins/jqplot.dateAxisRenderer.min",
     "jqplot.canvasTextRenderer": "vendor/jqplot/plugins/jqplot.canvasTextRenderer.min",
-    "jqplot.canvasAxisTickRenderer": "vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min"
+    "jqplot.canvasAxisTickRenderer": "vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min",
+
+    // Custom modules
+    safe_console: "js/safe_console"
   },
   // Define dependencies
   shim: {
@@ -41,7 +44,7 @@ requirejs.config({
 });
     </script>
     <script>
-requirejs(['jquery', 'gridster'], function($, gridster) {
+requirejs(['jquery', 'gridster', 'safe_console'], function($, gridster, console) {
   CIPdashboard = {
     // TODO: Make `stats` a function that returns the stats based on 
     //       CIPdashboard.catalog` and `CIPdashboard.query`.
