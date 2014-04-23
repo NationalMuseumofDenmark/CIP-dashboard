@@ -54,7 +54,8 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
   }
 
   var select_change_handler = function() {
-    var $optionSelected = $($("option:selected", this));
+    var $optionSelected = $("#field-inspector-select option:selected");
+    //var $optionSelected = $($("option:selected", this));
     var field = $optionSelected.data('field');
     var uuid = field.key;
 
@@ -64,14 +65,50 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
     for (var value in stats[uuid]['values']) {
       var count = stats[uuid]['values'][value];
       counts.push(count);
-      values.push(value);
+      if (parseInt(value) !== NaN) {
+        values.push(parseInt(value));
+      } else {
+        values.push(value);
+      }
     }
     console.log(counts);
     console.log(values);
 
+    // Make histogram
+    if (stats[uuid]['type'] == "length" && values.length > 35) {
+      var bin_count = 15;
+      var new_ticks = [];
+      var new_counts = [];
+
+      var min = Math.min.apply(null, values);
+      var max = Math.max.apply(null, values);
+      var step = Math.round((max - min) / bin_count);
+      for (var i = 0; i < bin_count + 1; i++) {
+        new_ticks.push(min + i * step);
+        new_counts.push(0);
+      }
+      console.log(new_ticks);
+      console.log(new_counts);
+
+      values.sort();
+      var i = 0;
+      for (value in values) {
+        if (stats[uuid]['values'][value] < new_ticks[i+1]) {
+          new_counts[i] += stats[uuid]['values'][value];
+        } else {
+          i++;
+        }
+      }
+
+      values = new_ticks;
+      counts = new_counts;
+    }
+
     // Add empty values to histogram
-    counts.push(stats[uuid]['empty_values']);
-    values.push('(tomt felt)');
+    if ($('#field-inspector-showempty input').is(':checked')) {
+      counts.push(stats[uuid]['empty_values']);
+      values.push('(tomt felt)');
+    }
 
     // plot1.series[0].data = counts;
     // plot1.axes.xaxis.ticks = values;
@@ -89,6 +126,7 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
   };
 
   $('#field-inspector-select').change(select_change_handler);
+  $('#field-inspector-showempty input').change(select_change_handler);
 
   // Ensure that a field is selected from the beginning
   select_change_handler.apply($('#field-inspector-select'));
@@ -135,9 +173,14 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
 
 <h1>Field inspector</h1>
 <select id="field-inspector-select"></select>
+<label id="field-inspector-showempty"><input type="checkbox">Show empty</label>
 <div id="chart-field-inspector" style="width:700px; height:225px;"></div>
 <style>
 #field-inspector-select {
   float: right;
+}
+#field-inspector-showempty {
+  float: right;
+  clear: both;
 }
 </style>
