@@ -9,10 +9,10 @@ body {
 header h1 {
   font-family: 'Titillium Web', sans-serif;
   display: inline-block;
+  margin-right: 30px;
 }
 
 header select#cip-catalog-chooser {
-  margin-left: 2em;
   display: inline-block;
 }
 
@@ -38,6 +38,7 @@ table caption {
 
 div.gridster {
   background-color: #004756;
+  margin-top: 10px;
 }
 
 div.gridster > ul > li {
