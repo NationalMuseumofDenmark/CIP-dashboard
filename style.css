@@ -26,7 +26,8 @@ header select#cip-query-chooser {
 #main-column {
   margin-left: auto;
   margin-right: auto;
-  width: 810px; /* 3 * (250 + 2 * 10) px */
+  /* width: 810px; /* 3 * (250 + 2 * 10) px */
+  width: 990px; /* 3 * (310 + 2 * 10) px */
   /*min-width: 810px;*/
 }
 
