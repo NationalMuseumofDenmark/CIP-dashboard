@@ -26,7 +26,7 @@ header select#cip-catalog-chooser {
 }
 
 #main-column {
-
+  min-width: 850px;
 }
 
 table caption {
