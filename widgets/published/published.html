@@ -55,49 +55,33 @@ requirejs(['jquery'], function($) {
 <!-- <script src="vendor/jqplot/jquery.min.js"></script> -->
 <!-- <script src="vendor/jqplot/jquery.jqplot.min.js"></script> -->
 <!-- <script src="vendor/jqplot/plugins/jqplot.pieRenderer.min.js"></script> -->
-<div id="publishedChart" style="height: 145px;"></div>
+<div id="publishedChart" style="height: 185px;"></div>
+<script src="vendor/flot/jquery.flot.js"></script>
+<script src="vendor/flot/jquery.flot.pie.js"></script>
 <script>
-requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
-  // var data = CIPdashboard.stats['stats'];
   var uuid_published = '{a493be21-0f70-4cae-9394-703eca848bad}';
   var stats_published = CIPdashboard.stats['stats'][uuid_published];
   var data = [];
   for (var pub_status in stats_published['values']) {
-    data.push([pub_status, stats_published['values'][pub_status]]);
-    // getPercentage(stats_published['values'][pub_status] / CIPdashboard.stats['processed_count']) + '</td>');
+    data.push({
+      label: pub_status,
+      data: stats_published['values'][pub_status]
+    });
   }
-  // var data = [
-  //   ['Heavy Industry', 12],['Retail', 9], ['Light Industry', 14], 
-  //   ['Out of home', 16],['Commuting', 7], ['Orientation', 9]
-  // ];
-  var plot1 = $.jqplot ('publishedChart', [data], 
-    { 
-      // remove border around graph
-      grid: {
-        borderColor:'transparent',
-        shadow:false,
-        drawBorder:false,
-        shadowColor:'transparent'
-      },
-      seriesDefaults: {
-        // Make this a pie chart.
-        renderer: jQuery.jqplot.PieRenderer, 
-        rendererOptions: {
-          // Put data labels on the pie slices.
-          // By default, labels show the percentage of the slice.
-          showDataLabels: true,
-          padding: 4,
-          shadowAlpha: 0,
-
-          // fill: false,
-          // Add a margin to seperate the slices.
-          sliceMargin: 4, 
-          // stroke the slices with a little thicker line.
-          lineWidth: 5,
-        }
-      }, 
-      legend: { show:true, location: 'e' }
+  // Add empty count to piechart
+  data.push({
+    label: '(empty)',
+    data: stats_published['empty_values']
+  });
+$.plot('#publishedChart', data, {
+  series: {
+    pie: {
+      show: true,
+      radius: 3/4,
     }
-  );
+  },
+  legend: {
+      show: true
+  }
 });
 </script>
