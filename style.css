@@ -12,15 +12,13 @@ header h1 {
   margin-right: 30px;
 }
 
-header select#cip-catalog-chooser {
+header select#cip-query-chooser {
+  margin-right: 10px;
+}
+
+#dashboard-settings  {
   display: inline-block;
 }
-
-#dashboard-settings {
-  position: absolute;
-  right: -10em;
-}
-
 #dashboard-settings label {
   font-weight: normal;
 }
