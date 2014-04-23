@@ -1,6 +1,45 @@
 <h1>Licenses</h1>
 What license do the assets have?
 <div id="licenseChart" style="height: 185px;"></div>
+<script src="vendor/flot/jquery.flot.js"></script>
+<script src="vendor/flot/jquery.flot.pie.js"></script>
+<script>
+  var uuid_license = '{f5d1dcd8-c553-4346-8d4d-672c85bb59be}';
+  var stats_license = CIPdashboard.stats['stats'][uuid_license];
+  var data = [];
+  for (var pub_status in stats_license['values']) {
+    data.push({
+      label: pub_status,
+      data: stats_license['values'][pub_status]
+    });
+  }
+  // Add empty count to piechart
+  data.push({
+    label: '(empty)',
+    data: stats_license['empty_values']
+  });
+$.plot('#licenseChart', data, {
+    series: {
+        pie: {
+            show: true,
+            radius: 3/4,
+            label: {
+                show: true,
+                radius: 3/4,
+                //formatter: labelFormatter,
+                background: {
+                    opacity: 0.5,
+                    color: '#000'
+                }
+            }
+        }
+    },
+    legend: {
+        show: false
+    }
+});
+</script>
+<!--
 <script>
 requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
   var uuid_license = '{f5d1dcd8-c553-4346-8d4d-672c85bb59be}';
@@ -48,3 +87,4 @@ requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
   );
 });
 </script>
+-->
