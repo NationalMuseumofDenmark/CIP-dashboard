@@ -35,7 +35,6 @@ table caption {
 }
 
 div.gridster {
-  background-color: #004756;
   margin-top: 10px;
 }
 
@@ -43,15 +42,12 @@ div.gridster > ul > li {
   background-color: white;
   overflow-y: auto; /* scroll */
   overflow-x: hidden;
-  /* border: 1px solid #CCCCCC; */
   list-style: none;
   padding: 0.25em;
+  border: 1px solid #AAA;
 }
 .gridster .preview-holder {
-    border: none!important;
-    border-radius: 0!important;
-    /* background: rgba(255,255,255,.2)!important; */
-    background-color: black;
+  background-color: #AAA !important;
 }
 
 
