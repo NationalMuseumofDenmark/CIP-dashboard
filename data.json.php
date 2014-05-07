@@ -1,5 +1,15 @@
 <?php
 define('DATA_VERSION', 4);
+define('TEMP_FILE', 'data.json.temp');
+define('UPDATE_INTERVAL', 3600); // 3600 seconds == 1 hour
+
+  // If we have a recent copy (1 hour) of the data -- return that
+  // -- force data reload with `data.json.php?force_update=1`
+  $last_modified = filemtime(TEMP_FILE); // UNIX timestamp (seconds since Epoch)
+  if (!isset($_GET['force_update']) && time() - $last_modified < UPDATE_INTERVAL) {
+    echo file_get_contents(TEMP_FILE);
+    exit(0);
+  }
 
   try {
     $m = new \MongoClient(getenv('CIP_DASHBOARD_MONGODB_URL'));
@@ -25,5 +35,11 @@ EOS;
   $cursor = $collection->find(array('data_version' => DATA_VERSION))->sort(array('timestamp' => -1))->limit(1);
   $document = $cursor->getNext();
 
-  echo json_encode($document);
+
+  // Save to temp file
+  $json = json_encode($document);
+  file_put_contents(TEMP_FILE, $json);
+
+  // Write response
+  echo $json;
 ?>
