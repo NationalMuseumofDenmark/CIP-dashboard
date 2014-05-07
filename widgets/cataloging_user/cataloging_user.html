@@ -15,17 +15,29 @@ requirejs(['jquery', 'jquery.flot', 'jquery.flot.categories'], function($) {
   var cataloging_user_uuid = '{af4b2e08-5f6a-11d2-8f20-0000c0e166dc}';
   var data = [];
   var values = stats[cataloging_user_uuid]['values'];
+  console.log('Values: %s', JSON.stringify(values));
 
   // Populate `data` array
   for (value in values) {
     var count = parseInt(values[value], 10);
+
+    // Check if the value consists only of spaces
+    if (/^\s+$/.test(value)) {
+      value = '"' + value + '"';
+    }
     data.push([count, value]);
   }
+
+  // Add empty values to histogram
+  data.push(['(tomt felt)', stats[cataloging_user_uuid]['empty_values']]);
 
   // Sort by highest
   data.sort(function(a, b) { return a[0] - b[0]; });
 
+  console.log('data: %s', JSON.stringify(data));
+
   // Plot
+  $('#widget-cataloging-users .chart').html('');
   $.plot('#widget-cataloging-users .chart', [data], {
     series: {
       bars: {
