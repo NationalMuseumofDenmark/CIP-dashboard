@@ -23,12 +23,16 @@ if (navigator.appVersion.indexOf("MSIE 6") !== -1 ||
 
 requirejs.config({
   paths: {
-    //jquery: "path/to/jquery",
+    // jQuery
     //jquery: "vendor/gridster.js/libs/jquery/jquery.js"
     //jquery: "vendor/jqplot/jquery.min.js",
     jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min",
+
+    // Other stuff
     gridster: "vendor/gridster.js/dist/jquery.gridster",
     excanvas: "vendor/jqplot/other/dist/excanvas.min",
+
+    // jqPlot
     jqplot: "vendor/jqplot/jquery.jqplot.min",
     "jqplot.barRenderer": "vendor/jqplot/plugins/jqplot.barRenderer.min",
     "jqplot.categoryAxisRenderer": "vendor/jqplot/plugins/jqplot.categoryAxisRenderer.min",
@@ -48,6 +52,7 @@ requirejs.config({
   },
   // Define dependencies
   shim: {
+    //'jquery': {exports: '$'},
     gridster: ["jquery"],
     jqplot: jqplot_dependencies,
     "jqplot.barRenderer": ["jqplot"],
@@ -204,6 +209,7 @@ requirejs(['jquery', 'gridster', 'safe_console'], function($, gridster, console)
       CIPdashboard.stats = data['stats'][$option_selected.data('query_name')][CIPdashboard.catalog];
       $(CIPdashboard).trigger('CIPdashboard-catalogChanged');
     });
+
     // Populate catalog <select>
     $('#cip-catalog-chooser').html('');
     for (var catalog_alias in data['stats']['ALL']) {
