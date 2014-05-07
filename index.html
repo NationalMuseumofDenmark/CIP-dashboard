@@ -38,6 +38,10 @@ requirejs.config({
     "jqplot.canvasTextRenderer": "vendor/jqplot/plugins/jqplot.canvasTextRenderer.min",
     "jqplot.canvasAxisTickRenderer": "vendor/jqplot/plugins/jqplot.canvasAxisTickRenderer.min",
 
+    // Flot
+    'jquery.flot': 'vendor/flot/jquery.flot',
+    'jquery.flot.categories': 'vendor/flot/jquery.flot.categories',
+
     // Custom modules
     safe_console: "js/safe_console"
   },
@@ -51,7 +55,14 @@ requirejs.config({
     "jqplot.pieRenderer": ["jqplot"],
     "jqplot.dateAxisRenderer": ["jqplot"],
     "jqplot.canvasTextRenderer": ["jqplot"],
-    "jqplot.canvasAxisTickRenderer": ["jqplot"]
+    "jqplot.canvasAxisTickRenderer": ["jqplot"],
+    'jquery.flot': {
+      deps: ['jquery'],
+      exports: '$.plot'
+    },
+    'jquery.flot.categories': {
+      deps: ['jquery.flot'],
+    },
   }
 });
     </script>

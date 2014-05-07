@@ -1,132 +1,138 @@
+<h1>Field inspector</h1>
+<div id="chart-field-inspector" style="width:700px; height:225px;"></div>
+<div class="options">
+  <label>Field:<br>
+    <select id="field-inspector-select"></select>
+  </label>
+  <label id="field-inspector-showempty">Show number of empty entries? <input type="checkbox"></label>
+  <label id="field-inspector-histogram">Use histogram? <input type="checkbox"></label>
+  <label id="field-inspector-bincount">Number of histogram bins: <input type="text" value="20"></label>
+  <div id="field-inspector-uuid">Field UUID: <span class="value"></span></div>
+  <a id="field-inspector-update">Update</a>
+</div>
+<style>
+#field-inspector-select {
+}
+#chart-field-inspector {
+  float: left;
+  height: 100%;
+}
+.options {
+  float: right;
+}
+.options label {
+  display: block;
+}
+#field-inspector-showempty input[type=checkbox] {
+  margin-left: 5px;
+}
+#field-inspector-bincount input[type=text] {
+  width: 30px;
+
+}
+#field-inspector-uuid {
+  font-size: 10px;
+}
+</style>
+
+
 <!-- TODO: Loading these two script breaks the piechart-widget -->
-<!-- <script src="vendor/jqplot/jquery.min.js"></script> -->
 <script>
-requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRenderer',
-  'jqplot.pointLabels',
-  'jqplot.dateAxisRenderer',
-  'jqplot.canvasTextRenderer',
-  'jqplot.canvasAxisTickRenderer'
-], function($) {
+requirejs(['jquery', 'jquery.flot', 'jquery.flot.categories'], function($) {
 
-  var options = {
-    // The "seriesDefaults" option is an options object that will
-    // be applied to all series in the chart.
-    seriesDefaults:{
-      renderer:$.jqplot.BarRenderer,
-      rendererOptions: {fillToZero: true}
-    },
-    // Custom labels for the series are specified with the "label"
-    // option on the series option.  Here a series option object
-    // is specified for each series.
-    //// series:[
-    ////     {label:'Hotel'},
-    ////     {label:'Event Regristration'},
-    ////     {label:'Airfare'}
-    //// ],
-    // Show the legend and put it outside the grid, but inside the
-    // plot container, shrinking the grid to accomodate the legend.
-    // A value of "outside" would not shrink the grid and allow
-    // the legend to overflow the container.
-    legend: {
-      show: false
-      // placement: 'outsideGrid'
-    },
-    axes: {
-      // Use a category axis on the x axis and use our custom ticks.
-      xaxis: {
-        renderer: $.jqplot.CategoryAxisRenderer,
-        tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-        ticks: [],
-        tickOptions: {
-          angle: -30,
-          fontSize: '10pt'
-        }
-      },
-      // Pad the y axis just a little so bars can get close to, but
-      // not touch, the grid boundaries.  1.2 is the default padding.
-      yaxis: {
-        // label: 'Count',
-        min: 0,
-        pad: 1.05
-        //tickOptions: {formatString: '$%d'}
-      }
-    }
-  }
-
-  var select_change_handler = function() {
+    var select_change_handler = function() {
     var $optionSelected = $("#field-inspector-select option:selected");
-    //var $optionSelected = $($("option:selected", this));
     var field = $optionSelected.data('field');
     var uuid = field.key;
+    $('#field-inspector-uuid .value').text(uuid);
 
+    // Fill data array
+    var data = [];
     var values = [];
-    var counts = [];
     var stats = CIPdashboard.stats['stats'];
     for (var value in stats[uuid]['values']) {
-      var count = stats[uuid]['values'][value];
-      counts.push(count);
-      if (parseInt(value) !== NaN) {
-        values.push(parseInt(value));
-      } else {
-        values.push(value);
-      }
+      var count = parseInt(stats[uuid]['values'][value]);
+      data.push([value, count]);
+      values.push(value);
     }
-    console.log(counts);
-    console.log(values);
+
+
+    // Plot option placeholder
+    var plot_xaxis_mode = null;
+    if (data.length > 35) {
+      plot_xaxis_mode = null;
+    } else {
+      plot_xaxis_mode = "categories"
+    }
+    var plot_bar_width = 0.6;
+
+    var use_histogram = $('#field-inspector-histogram input').is(':checked');
 
     // Make histogram
-    if (stats[uuid]['type'] == "length" && values.length > 35) {
-      var bin_count = 15;
-      var new_ticks = [];
-      var new_counts = [];
+    if (use_histogram && stats[uuid]['type'] == "length" && data.length > 35) {
+      var bin_count = parseFloat($('#field-inspector-bincount input').val());
+      var new_data = [];
 
-      var min = Math.min.apply(null, values);
-      var max = Math.max.apply(null, values);
+      // Convert to integers
+      var integer = function(i) { return parseInt(i, 10); };
+      int_values = values.map(integer);
+
+      // Set bin boundaries
+      var min = Math.min.apply(null, int_values);
+      var max = Math.max.apply(null, int_values);
+      //console.log('min: %d, max: %d', min, max);
       var step = Math.round((max - min) / bin_count);
-      for (var i = 0; i < bin_count + 1; i++) {
-        new_ticks.push(min + i * step);
-        new_counts.push(0);
-      }
-      console.log(new_ticks);
-      console.log(new_counts);
-
-      values.sort();
-      var i = 0;
-      for (value in values) {
-        if (stats[uuid]['values'][value] < new_ticks[i+1]) {
-          new_counts[i] += stats[uuid]['values'][value];
-        } else {
-          i++;
-        }
+      for (var i = 0; i < bin_count; i++) {
+        var bin_start = min + i * step;
+        new_data.push([bin_start, 0]);
       }
 
-      values = new_ticks;
-      counts = new_counts;
+      // Fills bins
+      // -- deprecated sort
+      // var sorting_function = function(a, b) { return a - b; };
+      // int_values.sort(sorting_function); // Javascript by default sorts the
+      //                                    // array values strings
+      //                                    // EVEN when values are numbers
+      int_values.forEach(function(value, k) {
+        var val_count = integer(stats[uuid]['values'][value.toString()]);
+        var bin = Math.floor((value - min) / step);
+        //console.log('value: %d, count: %d, bin: %d', value, val_count, bin);
+        new_data[bin][1] += val_count;
+      });
+
+      data = new_data;
+      plot_bar_width = step;
+      plot_xaxis_mode = null;
     }
 
     // Add empty values to histogram
     if ($('#field-inspector-showempty input').is(':checked')) {
-      counts.push(stats[uuid]['empty_values']);
-      values.push('(tomt felt)');
+      data.push(['(tomt felt)', stats[uuid]['empty_values']]);
     }
 
-    // plot1.series[0].data = counts;
-    // plot1.axes.xaxis.ticks = values;
-    // plot1.replot({resetAxes: true, data:[counts], axes:{xaxis:{ticks:values}}});
+    // Plot
+    $.plot('#chart-field-inspector', [data], {
+      series: {
+        bars: {
+          show: true,
+          barWidth: plot_bar_width,
+          align: "center",
+        }
+      },
+      xaxis: {
+        mode: plot_xaxis_mode,
+        tickLength: 0,
+      }
+    });
 
-    // Alternative replot
-    $('div#chart-field-inspector').html('');
-    if (values.length > 0) {
-      options.title = stats[uuid]['name'];
-      options.axes.xaxis.label = stats[uuid]['type'];
-
-      options.axes.xaxis.ticks = values;
-      var plot1 = $.jqplot('chart-field-inspector', [counts], options);
-    }
   };
 
   $('#field-inspector-select').change(select_change_handler);
   $('#field-inspector-showempty input').change(select_change_handler);
+  $('#field-inspector-update').click(function(e) {
+    e.preventDefault();
+    select_change_handler();
+  });
 
   // Ensure that a field is selected from the beginning
   select_change_handler.apply($('#field-inspector-select'));
@@ -138,7 +144,7 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
   }
   var getFilledPercentage = function(uuid) {
     var stats_field = CIPdashboard.stats['stats'][uuid];
-    console.log(stats_field['empty_values']);
+    console.log('Number of empty values: %d', stats_field['empty_values']);
     var empty_percentage = (stats_field['zero_length_values'] + stats_field['empty_values']) / CIPdashboard.stats['total_count'];
     var filled_percentage = 1.0 - empty_percentage;
     return getPercentage(filled_percentage);
@@ -165,22 +171,8 @@ requirejs(['jquery', 'jqplot',  'jqplot.barRenderer', 'jqplot.categoryAxisRender
   $('#field-inspector-select').change(function() {
     var $optionSelected = $($("option:selected", this));
     var field = $optionSelected.data('field');
-    console.log(field);
-    $('#field-inspector-uuid').text(field.key);
+    $('#field-inspector-uuid .value').text(field.key);
     $('#field-inspector-percentage').text(getFilledPercentage(field.key));
   });
 </script>
 
-<h1>Field inspector</h1>
-<select id="field-inspector-select"></select>
-<label id="field-inspector-showempty"><input type="checkbox">Show empty</label>
-<div id="chart-field-inspector" style="width:700px; height:225px;"></div>
-<style>
-#field-inspector-select {
-  float: right;
-}
-#field-inspector-showempty {
-  float: right;
-  clear: both;
-}
-</style>
