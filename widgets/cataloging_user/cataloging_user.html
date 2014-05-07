@@ -1,0 +1,45 @@
+<div id="widget-cataloging-users">
+  <h1>Cataloging users</h1>
+  <div class="chart" style="width:500px; height:500px;"></div>
+</div>
+<style>
+#widget-cataloging-users {
+  height: 100%;
+  width: 100%;
+}
+</style>
+<script>
+requirejs(['jquery', 'jquery.flot', 'jquery.flot.categories'], function($) {
+
+  var stats = CIPdashboard.stats['stats'];
+  var cataloging_user_uuid = '{af4b2e08-5f6a-11d2-8f20-0000c0e166dc}';
+  var data = [];
+  var values = stats[cataloging_user_uuid]['values'];
+
+  // Populate `data` array
+  for (value in values) {
+    var count = parseInt(values[value], 10);
+    data.push([count, value]);
+  }
+
+  // Sort by highest
+  data.sort(function(a, b) { return a[0] - b[0]; });
+
+  // Plot
+  $.plot('#widget-cataloging-users .chart', [data], {
+    series: {
+      bars: {
+        show: true,
+        horizontal: true,
+        // barWidth: plot_bar_width,
+        align: "center",
+      }
+    },
+    yaxis: {
+      mode: 'categories',
+      // tickLength: 0,
+    }
+  });
+
+});
+</script>
