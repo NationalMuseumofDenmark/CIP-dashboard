@@ -224,6 +224,9 @@ requirejs(['jquery', 'gridster', 'safe_console'], function($, gridster, console)
       }
     }
 
+    var optionSorter = function(a,b) { return ($(a).text > $(b).text) ? 1 : -1; };
+    $('#cip-catalog-chooser option').sort().appendTo('#cip-catalog-chooser');
+
     CIPdashboard.stats = data['stats']['ALL']['ALL'];
     CIPdashboard.query = 'ALL';
     CIPdashboard.catalog = 'ALL';
