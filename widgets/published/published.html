@@ -1,7 +1,6 @@
 <h1>Published status</h1>
 How many assets are published? <br>
 <span id="published-percentage" class="large-percentage" float="float: left"></span>
-<!-- <h4>Publishing overview</h4> -->
 <style>table#publish-table { margin-top: 1em; border-spacing: 0.5em 0em; border-collapse: separate; display: none;}</style>
 <table id="publish-table">
   <thead>
@@ -56,9 +55,8 @@ requirejs(['jquery'], function($) {
 <!-- <script src="vendor/jqplot/jquery.jqplot.min.js"></script> -->
 <!-- <script src="vendor/jqplot/plugins/jqplot.pieRenderer.min.js"></script> -->
 <div id="publishedChart" style="height: 185px;"></div>
-<script src="vendor/flot/jquery.flot.js"></script>
-<script src="vendor/flot/jquery.flot.pie.js"></script>
 <script>
+requirejs(['jquery', 'jquery.flot', 'jquery.flot.pie'], function($) {
   var uuid_published = '{a493be21-0f70-4cae-9394-703eca848bad}';
   var stats_published = CIPdashboard.stats['stats'][uuid_published];
   var data = [];
@@ -73,15 +71,16 @@ requirejs(['jquery'], function($) {
     label: '(empty)',
     data: stats_published['empty_values']
   });
-$.plot('#publishedChart', data, {
-  series: {
-    pie: {
-      show: true,
-      radius: 3/4,
+  $.plot('#publishedChart', data, {
+    series: {
+      pie: {
+        show: true,
+        radius: 3/4,
+      }
+    },
+    legend: {
+        show: true
     }
-  },
-  legend: {
-      show: true
-  }
+  });
 });
 </script>

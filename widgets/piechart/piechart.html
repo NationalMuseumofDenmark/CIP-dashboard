@@ -1,9 +1,8 @@
 <h1>Licenses</h1>
 What license do the assets have?
 <div id="licenseChart" style="height: 185px;"></div>
-<script src="vendor/flot/jquery.flot.js"></script>
-<script src="vendor/flot/jquery.flot.pie.js"></script>
 <script>
+requirejs(['jquery', 'jquery.flot', 'jquery.flot.pie'], function($) {
   var uuid_license = '{f5d1dcd8-c553-4346-8d4d-672c85bb59be}';
   var stats_license = CIPdashboard.stats['stats'][uuid_license];
   var data = [];
@@ -18,16 +17,17 @@ What license do the assets have?
     label: '(empty)',
     data: stats_license['empty_values']
   });
-$.plot('#licenseChart', data, {
-  series: {
-    pie: {
-      show: true,
-      radius: 3/4,
+  $.plot('#licenseChart', data, {
+    series: {
+      pie: {
+        show: true,
+        radius: 3/4,
+      }
+    },
+    legend: {
+        show: true
     }
-  },
-  legend: {
-      show: true
-  }
+  });
 });
 </script>
 <!--
@@ -48,7 +48,8 @@ requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
         borderColor:'transparent',
         shadow:false,
         drawBorder:false,
-        shadowColor:'transparent'
+        shadowColor:'transparent',
+        background: '#FFF'
       },
       seriesDefaults: {
         // Make this a pie chart.
@@ -72,7 +73,7 @@ requirejs(['jquery', 'jqplot', 'jqplot.pieRenderer'], function($) {
           // stroke the slices with a little thicker line.
           lineWidth: 5,
         }
-      }, 
+      },
       legend: { show:true, location: 'e' }
     }
   );
