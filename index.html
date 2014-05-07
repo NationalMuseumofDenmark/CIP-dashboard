@@ -116,8 +116,13 @@ requirejs(['jquery', 'gridster', 'safe_console'], function($, gridster, console)
             $widget.append(data);
           };
         };
-        $.get(url).success(success_handler($widget)).error(function() {
-          console.log('CIPdashboard: Failed to load widget: "' + this.url + '".');
+        $.ajax({
+          url: url,
+          cache: false, // Even with hard refresh (Ctrl-Shift-R) Firefox caches
+                        // AJAX requests :(
+                        // -- this option should disable (bypass) the AJAX cache
+          success:  success_handler($widget),
+          error: function() { console.log('CIPdashboard: Failed to load widget: "' + this.url + '".'); },
         });
       }
     }
